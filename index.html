@@ -18,7 +18,7 @@
             background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 40%, #7cfc00 40%, #7cfc00 100%);
             min-height: 100vh;
             position: relative;
-            padding-bottom: 20px;
+            padding-bottom: 60px; /* Espacio para el crédito inferior */
         }
         .animal {
             cursor: pointer;
@@ -51,6 +51,23 @@
             from { transform: scale(0); }
             to { transform: scale(1); }
         }
+        /* Estilo para los créditos */
+        .footer-credits {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px);
+            text-align: center;
+            padding: 8px 0;
+            font-weight: bold;
+            color: #1e40af;
+            border-top: 2px solid #ffffff;
+            z-index: 40;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -72,7 +89,7 @@
     <!-- Área Principal -->
     <div class="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-4 md:gap-8 z-10 px-2">
         
-        <!-- Casitas (Barns) - Grid más denso para móviles -->
+        <!-- Casitas (Barns) -->
         <div id="barns-container" class="grid grid-cols-4 lg:grid-cols-2 gap-2 md:gap-4 order-2 lg:order-1 w-full lg:w-auto">
             <!-- Dinámico -->
         </div>
@@ -95,10 +112,14 @@
         <h2 id="success-msg" class="text-5xl md:text-7xl font-bold mb-4">¡GENIAL!</h2>
         <p class="text-2xl md:text-3xl">¡Lo hiciste muy bien!</p>
     </div>
+
+    <!-- Créditos siempre presentes -->
+    <div class="footer-credits">
+        Juego Creado por: JULIO GARIBAY
+    </div>
 </div>
 
 <script>
-    // Expandimos a 8 colores
     const COLORS = [
         { id: 'red', hex: '#ef4444', name: 'Rojo' },
         { id: 'blue', hex: '#3b82f6', name: 'Azul' },
@@ -110,7 +131,6 @@
         { id: 'brown', hex: '#92400e', name: 'Marrón' }
     ];
 
-    // Expandimos a 10 animales
     const ANIMALS = [
         { type: 'Vaca', emoji: '🐮', sound: '¡Muuuu!' },
         { type: 'Cerdo', emoji: '🐷', sound: '¡Oinc!' },
@@ -135,18 +155,16 @@
     const successMsg = document.getElementById('success-msg');
 
     function initGame() {
-        // Generar las 8 casitas
         barnsContainer.innerHTML = '';
         COLORS.forEach(color => {
             const barn = document.createElement('div');
-            // Diseño responsive: pequeños cuadrados en móvil, casas grandes en desktop
             barn.className = `barn cursor-pointer flex flex-col items-center group`;
             barn.innerHTML = `
                 <div class="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-t-xl border-2 md:border-4 border-b-0 border-white shadow-lg flex items-center justify-center text-2xl md:text-5xl" 
                      style="background-color: ${color.hex}">
                     🏠
                 </div>
-                <div class="w-full py-1 bg-white/90 rounded-b-lg text-blue-900 text-center font-bold text-xs md:text-base border-x-2 md:border-x-4 border-b-2 md:border-b-4 border-white truncate">
+                <div class="w-full py-1 bg-white/90 rounded-b-lg text-blue-900 text-center font-bold text-xs md:text-base border-x-2 md:border-x-4 border-b-2 md:border-b-4 border-white truncate px-1">
                     ${color.name}
                 </div>
             `;
@@ -158,19 +176,16 @@
     }
 
     function nextTurn() {
-        // Seleccionamos un animal y un color al azar de la nueva lista
         const randomAnimal = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
         const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
         
         currentAnimal = randomAnimal;
         currentColor = randomColor;
 
-        // Limpiar animaciones previas
         animalDisplay.classList.remove('bounce-in');
-        void animalDisplay.offsetWidth; // Trigger reflow
+        void animalDisplay.offsetWidth; 
         animalDisplay.classList.add('bounce-in');
 
-        // Renderizar animal
         animalDisplay.innerHTML = `
             <div class="animal text-7xl md:text-9xl" 
                  style="color: ${randomColor.hex}; filter: drop-shadow(0 0 5px white);">
@@ -194,8 +209,6 @@
     function handleSuccess() {
         successMsg.textContent = currentAnimal.sound;
         successOverlay.classList.remove('hidden');
-        
-        // Efecto visual en la instrucción
         instruction.textContent = "¡SÍ! " + currentAnimal.sound;
         
         setTimeout(() => {
